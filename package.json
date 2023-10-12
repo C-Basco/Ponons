@@ -1,0 +1,7 @@
+{
+  "dependencies": {
+    "@apideck/better-ajv-errors": "^0.3.6",
+    "bootstrap": "^5.3.0",
+    "react-responsive-carousel": "^3.2.23"
+  }
+}

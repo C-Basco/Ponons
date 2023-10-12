@@ -1,0 +1,59 @@
+volumes:
+  ponos-data:
+    external: true
+  pg-admin:
+    external: true
+services:
+  fastapi:
+    environment:
+      SIGNING_KEY: ${SIGNING_KEY}
+      DATABASE_URL: postgresql://conn_user:simple@postgres/ponos_db
+      CORS_HOST: http://localhost:3000
+    build:
+      context: api
+      dockerfile: Dockerfile.dev
+    ports:
+      - 8000:8000
+    volumes:
+      - ./api:/app
+
+  ghi:
+    image: node:lts-bullseye
+    command: /bin/bash run.sh
+    working_dir: /app
+    volumes:
+      - ./ghi:/app
+    ports:
+      - "3000:3000"
+    environment:
+      HOST_OS: ${OS}
+      NODE_ENV: development
+      HOST: "0.0.0.0"
+      PUBLIC_URL: http://localhost:3000
+      REACT_APP_API_HOST: ${REACT_APP_API_HOST}
+
+  postgres:
+    build:
+      context: data
+      dockerfile: Dockerfile.dev
+    volumes:
+      - ponos-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: simple
+      POSTGRES_USER: conn_user
+      POSTGRES_DB: ponos_db
+    ports:
+      - 15432:5432
+
+  pg-admin:
+    image: dpage/pgadmin4
+    volumes:
+      - pg-admin:/var/lib/pgadmin
+    ports:
+      - 8082:80
+    environment:
+      PGADMIN_DEFAULT_EMAIL: conn@gmail.com
+      PGADMIN_DEFAULT_PASSWORD: ok
+      PGADMIN_DISABLE_POSTFIX: 1
+    depends_on:
+     - postgres
