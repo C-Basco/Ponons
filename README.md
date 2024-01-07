@@ -1,4 +1,4 @@
-# Ponons
+# Ponos
 ## Overview
 Ponos is a simple project management application. Create task, set deadlines and add members if you choose.
 This project is a an updated version of a task management application built with Django that you can find here: https://gitlab.com/C-Basco/Task-Tracker
